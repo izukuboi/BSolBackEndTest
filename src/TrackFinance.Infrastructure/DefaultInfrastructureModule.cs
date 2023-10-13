@@ -2,8 +2,7 @@
 using Autofac;
 using MediatR;
 using MediatR.Pipeline;
-using TrackFinance.Core.Interfaces;
-using TrackFinance.Core.ProjectAggregate;
+using TrackFinance.Core.TransactionAgregate;
 using TrackFinance.Infrastructure.Data;
 using TrackFinance.SharedKernel;
 using TrackFinance.SharedKernel.Interfaces;
@@ -18,7 +17,7 @@ public class DefaultInfrastructureModule : Module
   public DefaultInfrastructureModule(bool isDevelopment, Assembly? callingAssembly = null)
   {
     _isDevelopment = isDevelopment;
-    var coreAssembly = Assembly.GetAssembly(typeof(Project)); // TODO: Replace "Project" with any type from your Core project
+    var coreAssembly = Assembly.GetAssembly(typeof(Transaction)); // TODO: Replace "Project" with any type from your Core project
     var infrastructureAssembly = Assembly.GetAssembly(typeof(StartupSetup));
     if (coreAssembly != null)
     {
@@ -86,8 +85,7 @@ public class DefaultInfrastructureModule : Module
       .AsImplementedInterfaces();
     }
 
-    builder.RegisterType<EmailSender>().As<IEmailSender>()
-        .InstancePerLifetimeScope();
+
   }
 
   private void RegisterDevelopmentOnlyDependencies(ContainerBuilder builder)

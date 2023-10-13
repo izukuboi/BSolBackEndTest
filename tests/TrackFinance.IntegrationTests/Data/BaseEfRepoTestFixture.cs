@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
-using TrackFinance.Core.ProjectAggregate;
+using TrackFinance.Core.TransactionAgregate;
 using TrackFinance.Infrastructure.Data;
 using TrackFinance.SharedKernel.Interfaces;
 
@@ -35,9 +35,9 @@ public abstract class BaseEfRepoTestFixture
     return builder.Options;
   }
 
-  protected EfRepository<Project> GetRepository()
+  protected EfRepository<Transaction> GetRepository()
   {
-    return new EfRepository<Project>(_dbContext);
+    return new EfRepository<Transaction>(_dbContext);
   }
 
   public EfRepository<T> GetRepositoryGeneric<T>() where T : class, IAggregateRoot

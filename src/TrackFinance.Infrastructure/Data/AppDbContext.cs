@@ -1,6 +1,5 @@
 ﻿using System.Reflection;
 using Microsoft.EntityFrameworkCore;
-using TrackFinance.Core.ProjectAggregate;
 using TrackFinance.Core.TransactionAgregate;
 using TrackFinance.SharedKernel;
 using TrackFinance.SharedKernel.Interfaces;
@@ -17,9 +16,7 @@ public class AppDbContext : DbContext
     _dispatcher = dispatcher;
   }
 
-  public DbSet<ToDoItem> ToDoItems => Set<ToDoItem>();
-  public DbSet<Project> Projects => Set<Project>();
-  public DbSet<Transaction> Transactions => Set<Transaction>();
+    public DbSet<Transaction> Transactions => Set<Transaction>();
   protected override void OnModelCreating(ModelBuilder modelBuilder)
   {
     base.OnModelCreating(modelBuilder);

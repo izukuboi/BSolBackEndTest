@@ -2,9 +2,9 @@
 using Ardalis.ApiEndpoints;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
-using TrackFinance.Core.ProjectAggregate.Specifications;
 using TrackFinance.Core.TransactionAgregate;
 using TrackFinance.Core.TransactionAgregate.Enum;
+using TrackFinance.Core.TransactionAgregate.Specifications;
 using TrackFinance.SharedKernel.Interfaces;
 
 namespace TrackFinance.Web.Endpoints.Incomes;

@@ -28,4 +28,8 @@
     <ProjectReference Include="..\TrackFinance.UnitTests\TrackFinance.UnitTests.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="ApiEndpoints\Balance\" />
+  </ItemGroup>
+
 </Project>

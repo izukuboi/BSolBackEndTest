@@ -1,4 +1,5 @@
-﻿using TrackFinance.Core.ProjectAggregate;
+﻿using TrackFinance.Core.TransactionAgregate;
+using TrackFinance.Core.TransactionAgregate.Enum;
 using Xunit;
 
 namespace TrackFinance.IntegrationTests.Data;
@@ -10,14 +11,14 @@ public class EfRepositoryDelete : BaseEfRepoTestFixture
     // add a project
     var repository = GetRepository();
     var initialName = Guid.NewGuid().ToString();
-    var project = new Project(initialName, PriorityStatus.Backlog);
-    await repository.AddAsync(project);
+    var transaction = new Transaction(initialName, 2000, TransactionDescriptionType.Education, DateTime.Now, 1, TransactionType.Expense);
+    await repository.AddAsync(transaction);
 
     // delete the item
-    await repository.DeleteAsync(project);
+    await repository.DeleteAsync(transaction);
 
     // verify it's no longer there
     Assert.DoesNotContain(await repository.ListAsync(),
-        project => project.Name == initialName);
+        project => project.Description == initialName);
   }
 }

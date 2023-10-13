@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using TrackFinance.Core.ProjectAggregate;
+using TrackFinance.Core.TransactionAgregate;
+using TrackFinance.Core.TransactionAgregate.Enum;
 using Xunit;
 
 namespace TrackFinance.IntegrationTests.Data;
@@ -11,35 +12,35 @@ public class EfRepositoryUpdate : BaseEfRepoTestFixture
     // add a project
     var repository = GetRepository();
     var initialName = Guid.NewGuid().ToString();
-    var project = new Project(initialName, PriorityStatus.Backlog);
+    var transaction = new Transaction(initialName, 2000, TransactionDescriptionType.Education, DateTime.Now, 1, TransactionType.Expense);
 
-    await repository.AddAsync(project);
+    await repository.AddAsync(transaction);
 
     // detach the item so we get a different instance
-    _dbContext.Entry(project).State = EntityState.Detached;
+    _dbContext.Entry(transaction).State = EntityState.Detached;
 
     // fetch the item and update its title
-    var newProject = (await repository.ListAsync())
-        .FirstOrDefault(project => project.Name == initialName);
-    if (newProject == null)
+    var newTransaction = (await repository.ListAsync())
+        .FirstOrDefault(project => project.Description == initialName);
+    if (newTransaction == null)
     {
-      Assert.NotNull(newProject);
+      Assert.NotNull(newTransaction);
       return;
     }
-    Assert.NotSame(project, newProject);
+    Assert.NotSame(transaction, newTransaction);
     var newName = Guid.NewGuid().ToString();
-    newProject.UpdateName(newName);
+    newTransaction.UpdateDescription(newName);
 
     // Update the item
-    await repository.UpdateAsync(newProject);
+    await repository.UpdateAsync(newTransaction);
 
     // Fetch the updated item
     var updatedItem = (await repository.ListAsync())
-        .FirstOrDefault(project => project.Name == newName);
+        .FirstOrDefault(project => project.Description == newName);
 
     Assert.NotNull(updatedItem);
-    Assert.NotEqual(project.Name, updatedItem?.Name);
-    Assert.Equal(project.Priority, updatedItem?.Priority);
-    Assert.Equal(newProject.Id, updatedItem?.Id);
+    Assert.NotEqual(transaction.Description, updatedItem?.Description);
+    Assert.Equal(transaction.Amount, updatedItem?.Amount);
+    Assert.Equal(newTransaction.Id, updatedItem?.Id);
   }
 }

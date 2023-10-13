@@ -1,6 +1,5 @@
 ﻿using System.Xml.Linq;
 using TrackFinance.Core.TransactionAgregate.Enum;
-using TrackFinance.Web.Endpoints.ProjectEndpoints;
 
 namespace TrackFinance.Web.Endpoints.Expense;
 

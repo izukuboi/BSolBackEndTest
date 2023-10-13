@@ -15,14 +15,19 @@ public class Transaction : EntityBase, IAggregateRoot
   public TransactionType TransactionType { get; private set; }
 
 
-  public Transaction(string description, decimal amount, TransactionDescriptionType transactionDescriptionType, DateTime expenseDate, int userId, TransactionType transactionType)
+
+  public Transaction(string description, decimal amount, TransactionDescriptionType transactionDescriptionType, DateTime date, int userId, TransactionType transactionType)
   {
     Description = description;
     Amount = amount;
     TransactionDescriptionType = transactionDescriptionType;
-    ExpenseDate = expenseDate;
+    ExpenseDate = date;
     UserId = userId;
     TransactionType = transactionType;
+  }
+
+  public Transaction()
+  {
   }
 
   public void UpdateValue(string description, decimal amount, TransactionDescriptionType transactionDescriptionType, DateTime expenseDate, int userId, TransactionType transactionType)
@@ -33,5 +38,9 @@ public class Transaction : EntityBase, IAggregateRoot
     ExpenseDate = expenseDate;
     UserId = userId;
     TransactionType = transactionType;
+  }
+  public void UpdateDescription(string description)
+  {
+    Description = description;
   }
 }
