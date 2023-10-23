@@ -4,8 +4,9 @@ namespace TrackFinance.Web.Endpoints.Historical;
 
 public class GetHistoricalRecordByUserRequest
 {
-  public const string Route = "/HistoricalRecords/{userId:int}/user";
-  public static string BuildRoute(int userId, string? startDate, string? endDate) =>    Route.Replace("{userId:int}", userId.ToString()) +
+  public const string UserIdSubRoute = "{UserId:int}";
+  public const string Route = $"/HistoricalRecords/{UserIdSubRoute}/user";
+  public static string BuildRoute(int userId, string? startDate, string? endDate) =>    Route.Replace(UserIdSubRoute, userId.ToString()) +
     $"?startDate={startDate ?? DateTime.Now.ToString("d")}&endDate={endDate ?? DateTime.Now.ToString("d")}";
   public int UserId { get; set; }
 
