@@ -291,4 +291,42 @@ public class TransactionFinanceService : ITransactionFinanceService
     }
     return cal.GetWeekOfYear(time, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
   }
+
+  public async Task<Result<List<TransactionDataDto>>> GetTransactionItemByDateAsync(int userId, TransactionType transactionType, DateTime startDate, DateTime endDate, CancellationToken cancellationToken = default)
+  {
+    var itemsByDate = await _repository.ListAsync(new ItemsByDateSpec(startDate, endDate, transactionType, userId), cancellationToken);
+
+    return GetListTransactionByDate(itemsByDate);
+  }
+
+  private static Result<List<TransactionDataDto>> GetListTransactionByDate(List<Transaction> itemByDate)
+  {
+    var transactions = new List<TransactionDataDto>();
+    var selectedValues = itemByDate.Select(t => new
+    {
+      t.ExpenseDate.Date,
+      t.Amount,
+      t.ExpenseDate.DayOfWeek,
+      t.TransactionDescriptionType,
+      t.TransactionType
+    }).GroupBy(t => new { t.TransactionType, t.TransactionDescriptionType })
+          .Select(y => new { Date = y.Key, TotalAmount = y.Sum(x => x.Amount), y.Key.TransactionType, y.Key.TransactionDescriptionType})
+          .ToList();
+
+    foreach ( var item in selectedValues)
+    {
+      var transactionItem = new TransactionDataDto
+      {
+        TotalAmount = item.TotalAmount,
+        TransactionType = item.TransactionType,
+        TransactionDescriptionType = item.TransactionDescriptionType
+      };
+      transactions.Add(transactionItem);
+    }
+
+    if (transactions.Count == 0) Result<List<TransactionDataDto>>.NotFound();
+
+    return transactions;
+  }
+
 }
