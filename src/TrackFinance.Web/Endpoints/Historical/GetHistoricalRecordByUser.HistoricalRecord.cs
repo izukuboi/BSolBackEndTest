@@ -2,5 +2,5 @@
 
 namespace TrackFinance.Web.Endpoints.Historical;
 
-public record HistoricalRecord(string description, TransactionDescriptionType transactionDescriptionType, decimal amount, DateTime expenseDate, TransactionType transactionType);
+public record HistoricalRecord(int transactionId, string description, TransactionDescriptionType transactionDescriptionType, decimal amount, DateTime expenseDate, TransactionType transactionType);
 

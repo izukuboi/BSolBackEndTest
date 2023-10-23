@@ -21,8 +21,8 @@ public class GetHistoricalRecordByUser : EndpointBaseAsync
   [Produces(MediaTypeNames.Application.Json)]
   [HttpGet(GetHistoricalRecordByUserRequest.Route)]
   [SwaggerOperation(
-      Summary = "Get Historical Records by user",
-      Description = "Get Historical Records by userId",
+      Summary = "Get Historical Records by user with pagination",
+      Description = "Get Historical Records by userId with Keyset pagination",
       OperationId = "HistoricalRecords.GetHistoricalRecordByUser",
       Tags = new[] { "HistoricalRecordsEndpoints" })
   ]
@@ -30,15 +30,19 @@ public class GetHistoricalRecordByUser : EndpointBaseAsync
     Ok(new GetHistoricalRecordByUserResponse
     {
       HistoricalRecord = (await _repository.ListAsync(cancellationToken))
+         .OrderBy(expense => expense.Id)
+         .Where(Expense => Expense.Id > request.LastTransactionId) //Keyset pagination https://learn.microsoft.com/en-us/ef/core/querying/pagination#keyset-pagination
          .Where(expense => expense.UserId == request.UserId)
          .Where(date => Convert.ToDateTime(date.ExpenseDate.ToString("d")) >= request.StartDate && Convert.ToDateTime(date.ExpenseDate.ToString("d")) <= request.EndDate)
          .Select(expense => new HistoricalRecord(
+                                               transactionId: expense.Id,
                                                description: expense.Description,
                                                transactionDescriptionType: expense.TransactionDescriptionType,
                                                amount: expense.Amount,
                                                expenseDate: expense.ExpenseDate,
                                                transactionType: expense.TransactionType))
          .OrderBy(d => d.expenseDate)
+         .Take(request.PageSize)
          .ToList()
     });
 }
